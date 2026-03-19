@@ -16,6 +16,6 @@ public class AuthRequest {
     @Schema(description = "Пароль", example = "admin123")
     private String password;
 
-    @Schema(description = "Токен Google reCAPTCHA для проверки, что запрос от человека")
+    @Schema(description = "Токен Google reCAPTCHA для проверки, что запрос от человека", example = "any_string_works")
     private String recaptchaToken;
 }

@@ -26,6 +26,8 @@ services:
   backend:
     build: ./backend
     container_name: zooavito-backend
+    ports:                                 
+      - "8081:8081" 
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/zooavito
       SPRING_DATASOURCE_USERNAME: postgres

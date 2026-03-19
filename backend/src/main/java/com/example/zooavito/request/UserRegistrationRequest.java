@@ -36,6 +36,6 @@ public class UserRegistrationRequest {
     @Schema(description = "Повтор пароля", example = "12345678")
     private String confirmPassword;
 
-    @Schema(description = "Токен Google reCAPTCHA для проверки, что запрос от человека")
+    @Schema(description = "Токен Google reCAPTCHA для проверки, что запрос от человека", example = "any_string_works")
     private String recaptchaToken;
 }
