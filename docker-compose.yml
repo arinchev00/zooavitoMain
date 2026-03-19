@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # База данных PostgreSQL
+  db:
+    image: postgres:15
+    container_name: zooavito-db
+    environment:
+      POSTGRES_DB: zooavito
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - zooavito-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Бэкенд Spring Boot
+  backend:
+    build: ./backend
+    container_name: zooavito-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/zooavito
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      GOOGLE_RECAPTCHA_SECRET: ${GOOGLE_RECAPTCHA_SECRET}
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - zooavito-network
+    restart: on-failure
+
+  # Фронтенд с Nginx
+  frontend:
+    build: ./frontend
+    container_name: zooavito-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - zooavito-network
+    restart: unless-stopped
+
+networks:
+  zooavito-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

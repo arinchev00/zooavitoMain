@@ -1,0 +1,293 @@
+.announcement-form-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  margin: 40px 0;
+  text-align: left; /* Выравнивание всего текста по левому краю */
+}
+
+.form-title {
+  color: #28a745;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #28a745;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.announcement-form {
+  text-align: left;
+}
+
+.announcement-form .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.announcement-form label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+  text-align: left;
+}
+
+/* Красная звездочка для обязательных полей */
+.required-star {
+  color: #dc3545;
+  margin-left: 3px;
+  font-size: 16px;
+}
+
+.announcement-form .form-control,
+.announcement-form .form-select {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+}
+
+.announcement-form .form-control:focus,
+.announcement-form .form-select:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  outline: 0;
+}
+
+/* Стили для текстовых полей */
+.announcement-form textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Загрузка изображений */
+.image-upload-container {
+  border: 2px dashed #28a745;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.image-upload-container:hover {
+  background-color: #e9ecef;
+  border-color: #218838;
+}
+
+.image-input {
+  display: none;
+}
+
+.image-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.image-upload-label i {
+  font-size: 48px;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.image-upload-label span {
+  text-align: center;
+}
+
+.form-text {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #6c757d;
+  text-align: left;
+}
+
+/* Превью изображений */
+.image-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: flex-start;
+}
+
+.image-preview {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.btn-remove:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+}
+
+/* Кнопки */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+.form-actions .btn {
+  padding: 10px 30px;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.form-actions .btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+
+.form-actions .btn-primary:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+.form-actions .btn-primary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.form-actions .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+.form-actions .btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .announcement-form-container {
+    padding: 20px;
+  }
+  
+  .image-previews {
+    justify-content: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Заголовки для секций изображений */
+.existing-images h6,
+.new-images h6 {
+  margin-bottom: 10px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.existing-images {
+  margin-bottom: 20px;
+}
+
+/* Стили для контейнера с существующими изображениями */
+.existing-images .image-previews,
+.new-images .image-previews {
+  margin-bottom: 10px;
+}
+
+/* Стиль для главного фото */
+.image-preview.main-image {
+  border: 3px solid #28a745;
+}
+
+.btn-star {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 25px;
+  height: 25px;
+  background-color: #ffc107;
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+  z-index: 2;
+}
+
+.btn-star:hover {
+  background-color: #e0a800;
+  transform: scale(1.1);
+}
+
+.main-badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 25px;
+  height: 25px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 2;
+}
+
+.image-controls {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+}

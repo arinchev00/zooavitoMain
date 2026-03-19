@@ -1,0 +1,251 @@
+.admin-panel {
+  padding: 40px 0;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 200px);
+}
+
+.admin-title {
+  color: #28a745;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #28a745;
+  padding-bottom: 10px;
+}
+
+.admin-section {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  margin-bottom: 30px;
+}
+
+.admin-section h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.admin-form {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.admin-form .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.admin-form .form-control {
+  width: 100%;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-item {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.category-header {
+  background-color: #f8f9fa;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.category-title {
+  font-weight: 500;
+  color: #333;
+}
+
+.category-id {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.category-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.subcategories-section {
+  padding: 15px;
+  background-color: white;
+}
+
+.subcategories-section h4 {
+  color: #28a745;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.create-subcategory-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.create-subcategory-form .form-control {
+  flex: 1;
+}
+
+.subcategories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subcategory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.subcategory-title {
+  color: #333;
+}
+
+.subcategory-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.edit-form {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.edit-form .form-control {
+  flex: 1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .admin-form {
+    flex-direction: column;
+  }
+  
+  .category-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .category-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .category-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .create-subcategory-form {
+    flex-direction: column;
+  }
+  
+  .edit-form {
+    flex-direction: column;
+  }
+}
+
+.order-navigation-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0;
+  overflow: hidden;
+}
+
+.order-navigation {
+  padding: 30px;
+  color: white;
+  text-align: center;
+}
+
+.order-navigation h2 {
+  color: white;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 24px;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  padding-bottom: 15px;
+}
+
+.order-navigation .text-muted {
+  color: rgba(255,255,255,0.9) !important;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.order-navigation .btn-success {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 12px 30px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-navigation .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  background: #f8f9fa;
+  color: #764ba2;
+}
+
+.order-navigation .btn-success i {
+  font-size: 18px;
+}
+
+/* Анимация для иконки */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+.order-navigation .btn-success:hover i {
+  animation: bounce 1s infinite;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .order-navigation {
+    padding: 20px;
+  }
+  
+  .order-navigation h2 {
+    font-size: 20px;
+  }
+  
+  .order-navigation .btn-success {
+    width: 100%;
+    justify-content: center;
+  }
+}

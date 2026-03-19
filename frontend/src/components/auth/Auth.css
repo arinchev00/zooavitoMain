@@ -1,0 +1,171 @@
+/* Контейнер для формы */
+.auth-form-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  margin: 40px 0;
+  text-align: left;  /* Выравнивание всего текста по левому краю */
+}
+
+/* Заголовок */
+.auth-title {
+  color: #28a745;
+  margin-bottom: 10px;
+  text-align: left;
+  font-size: 24px;
+}
+
+/* Подзаголовок */
+.auth-subtitle {
+  color: #6c757d;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+/* Форма */
+.auth-form {
+  text-align: left;
+}
+
+/* Группа полей */
+.auth-form .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Метки (label) */
+.auth-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+  text-align: left;
+}
+
+/* Поля ввода */
+.auth-form .form-control {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 10px 12px;
+  width: 100%;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  text-align: left;
+}
+
+.auth-form .form-control:focus {
+  border-color: #28a745;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+/* Вспомогательный текст */
+.auth-form .form-text {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #6c757d;
+  text-align: left;
+}
+
+/* Ошибки */
+.auth-form .invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #dc3545;
+  text-align: left;
+}
+
+.auth-form .is-invalid {
+  border-color: #dc3545;
+}
+
+.auth-form .is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Кнопка */
+.auth-form .btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.auth-form .btn-primary:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+.auth-form .btn-primary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Футер формы */
+.auth-footer {
+  margin-top: 25px;
+  text-align: left;
+  border-top: 1px solid #dee2e6;
+  padding-top: 20px;
+}
+
+.auth-footer p {
+  margin: 0;
+  color: #6c757d;
+  text-align: left;
+}
+
+.auth-footer a {
+  color: #28a745;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  color: #218838;
+  text-decoration: underline;
+}
+
+/* Input group для телефона */
+.auth-form .input-group {
+  display: flex;
+  width: 100%;
+}
+
+.auth-form .input-group-prepend {
+  display: flex;
+}
+
+.auth-form .input-group-text {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  padding: 10px 12px;
+  color: #495057;
+}
+
+.auth-form .input-group .form-control {
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .auth-form-container {
+    margin: 20px 0;
+    padding: 20px;
+  }
+  
+  .auth-title {
+    font-size: 20px;
+  }
+}

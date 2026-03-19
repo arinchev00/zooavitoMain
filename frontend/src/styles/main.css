@@ -1,0 +1,271 @@
+/* Общие стили */
+body {
+  background-color: #f8f9fa;
+}
+
+/* Шапка сайта */
+.navbar-custom {
+  background-color: #28a745;
+  padding: 15px 0;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-custom .navbar-brand {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-custom .navbar-brand i {
+  font-size: 32px;
+  margin-right: 10px;
+}
+
+.navbar-custom .nav-link {
+  color: white !important;
+  font-weight: 500;
+  margin: 0 10px;
+}
+
+.navbar-custom .nav-link:hover {
+  color: rgba(255,255,255,.8) !important;
+}
+
+/* Кнопка подачи объявления */
+.btn-add-ad {
+  background-color: #ffc107;
+  color: #333;
+  font-weight: bold;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+}
+
+.btn-add-ad:hover {
+  background-color: #e0a800;
+  color: #333;
+}
+
+/* Поисковая строка */
+.search-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  margin-bottom: 30px;
+}
+
+.search-input {
+  border: 2px solid #28a745;
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+  height: 45px;
+}
+
+.search-btn {
+  background-color: #28a745;
+  color: white;
+  border: 2px solid #28a745;
+  border-radius: 0 20px 20px 0;
+  height: 45px;
+  padding: 0 20px;
+}
+
+.search-btn:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+/* Карточки категорий */
+.category-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  transition: transform 0.3s;
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,.15);
+}
+
+.category-card i {
+  font-size: 48px;
+  color: #28a745;
+  margin-bottom: 15px;
+}
+
+/* Карточки объявлений */
+.ad-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  transition: transform 0.3s;
+}
+
+.ad-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,.15);
+}
+
+.ad-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.ad-card .price {
+  color: #28a745;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Футер */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 30px 0;
+  margin-top: 50px;
+}
+
+.footer a {
+  color: #28a745;
+}
+
+.footer a:hover {
+  color: #218838;
+}
+
+/* Информация о пользователе */
+.user-info {
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.user-info i {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.user-name {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+/* Кнопка выхода */
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+  color: white;
+
+  /* Стили для выпадающего меню категорий */
+.dropdown-menu {
+  display: block;
+  background-color: white;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  clear: both;
+  color: #212529;
+  text-align: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+  color: #16181b;
+  background-color: #f8f9fa;
+}
+
+.navbar-nav .nav-link.dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+}
+
+/* Анимация для выпадающего меню */
+.dropdown-menu.show {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стили для фильтра */
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card-title {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+}
