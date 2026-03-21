@@ -5,6 +5,12 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Принимаем аргумент для публичного ключа reCAPTCHA
+ARG REACT_APP_RECAPTCHA_SITE_KEY
+
+# Устанавливаем переменную окружения для сборки
+ENV REACT_APP_RECAPTCHA_SITE_KEY=$REACT_APP_RECAPTCHA_SITE_KEY
+
 # Копируем файлы зависимостей
 COPY package*.json ./
 

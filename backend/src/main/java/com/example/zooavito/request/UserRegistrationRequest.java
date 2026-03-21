@@ -21,10 +21,10 @@ public class UserRegistrationRequest {
     private String email;
 
     @Pattern(
-            regexp = "^\\+\\d\\(\\d{3}\\)\\d{3}-\\d{2}-\\d{2}$",
-            message = "Телефон должен быть в формате: +x(xxx)xxx-xx-xx (например, +7(990)800-70-60)"
+            regexp = "^$|^\\+\\d\\(\\d{3}\\)\\d{3}-\\d{2}-\\d{2}$",
+            message = "Телефон должен быть в формате: +x(xxx)xxx-xx-xx (например, +7(990)800-70-60) или пустым"
     )
-    @Schema(description = "Номер телефона", example = "+7(990)800-70-60")
+    @Schema(description = "Номер телефона (необязательно)", example = "+7(990)800-70-60")
     private String telephoneNumber;
 
     @NotBlank(message = "Пароль обязателен")

@@ -1,14 +1,13 @@
 version: '3.8'
 
 services:
-  # База данных PostgreSQL
   db:
     image: postgres:15
     container_name: zooavito-db
     environment:
-      POSTGRES_DB: zooavito
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_POSTGRES_DATABASE}
+      POSTGRES_USER: ${DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -17,21 +16,20 @@ services:
       - zooavito-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Бэкенд Spring Boot
   backend:
     build: ./backend
     container_name: zooavito-backend
-    ports:                                 
-      - "8081:8081" 
+    ports:
+      - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/zooavito
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_POSTGRES_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
       GOOGLE_RECAPTCHA_SECRET: ${GOOGLE_RECAPTCHA_SECRET}
@@ -45,12 +43,16 @@ services:
       - zooavito-network
     restart: on-failure
 
-  # Фронтенд с Nginx
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - REACT_APP_RECAPTCHA_SITE_KEY=${REACT_APP_RECAPTCHA_SITE_KEY}
     container_name: zooavito-frontend
     ports:
       - "80:80"
+    environment:
+      - REACT_APP_RECAPTCHA_SITE_KEY=${REACT_APP_RECAPTCHA_SITE_KEY}
     depends_on:
       - backend
     networks:
