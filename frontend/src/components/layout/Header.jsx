@@ -69,7 +69,7 @@ const Header = () => {
 
   const getInitials = () => {
     if (!user) return 'U';
-    
+
     if (user?.fullName) {
       return user.fullName
         .split(' ')
@@ -83,7 +83,7 @@ const Header = () => {
 
   const getDisplayName = () => {
     if (!user) return 'Пользователь';
-    
+
     if (user?.fullName) {
       const nameParts = user.fullName.split(' ');
       if (nameParts.length > 1) {
@@ -106,7 +106,8 @@ const Header = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="navbarMain">
+        {/* ЕДИНСТВЕННОЕ ИЗМЕНЕНИЕ: убран класс collapse */}
+        <div className="navbar-collapse" id="navbarMain">
           <CategoryDropdown />
 
           {/* Кнопка для админа */}
@@ -125,7 +126,7 @@ const Header = () => {
             </div>
           ) : (
             <div className="d-flex align-items-center">
-              <div 
+              <div
                 ref={menuRef}
                 className="user-info-wrapper"
                 onMouseEnter={handleMouseEnter}
@@ -133,7 +134,7 @@ const Header = () => {
                 style={{ position: 'relative' }}
               >
                 <div className="user-info d-flex align-items-center" style={{ cursor: 'pointer' }}>
-                  <div 
+                  <div
                     className="user-avatar mr-2"
                     style={{
                       width: '40px',
@@ -154,7 +155,7 @@ const Header = () => {
                     <div className="user-name" style={{ fontWeight: '500', lineHeight: '1.2' }}>
                       {getDisplayName()}
                       {user?.role === 'ROLE_ADMIN' && (
-                        <span 
+                        <span
                           className="admin-badge ml-2"
                           style={{
                             fontSize: '10px',
@@ -181,7 +182,7 @@ const Header = () => {
 
                 {/* Выпадающее меню */}
                 {showUserMenu && (
-                  <div 
+                  <div
                     className="user-dropdown-menu"
                     style={{
                       position: 'absolute',
@@ -196,8 +197,8 @@ const Header = () => {
                       overflow: 'hidden'
                     }}
                   >
-                    <div className="dropdown-header" style={{ 
-                      padding: '16px', 
+                    <div className="dropdown-header" style={{
+                      padding: '16px',
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       color: 'white'
                     }}>
@@ -215,10 +216,10 @@ const Header = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Личный кабинет */}
-                    <Link 
-                      to="/profile" 
+                    <Link
+                      to="/profile"
                       className="dropdown-item"
                       onClick={() => setShowUserMenu(false)}
                       style={{
@@ -235,10 +236,10 @@ const Header = () => {
                       <i className="fas fa-user mr-3" style={{ width: '20px', color: '#667eea' }}></i>
                       Личный кабинет
                     </Link>
-                    
+
                     {/* Мои объявления */}
-                    <Link 
-                      to="/my-announcements" 
+                    <Link
+                      to="/my-announcements"
                       className="dropdown-item"
                       onClick={() => setShowUserMenu(false)}
                       style={{
@@ -255,9 +256,9 @@ const Header = () => {
                       <i className="fas fa-list mr-3" style={{ width: '20px', color: '#667eea' }}></i>
                       Мои объявления
                     </Link>
-                    
+
                     {/* Выход */}
-                    <button 
+                    <button
                       onClick={() => {
                         setShowUserMenu(false);
                         handleLogout();
