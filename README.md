@@ -110,22 +110,31 @@ docker-compose ps
 ### Скриншоты
 
 - Главная страница
-  https://screenshots/home.png
+![Главная страница](https://sun1-16.userapi.com/s/v1/ig2/bVjZ8aKJakyvCq1wE-l2EAYReVdCXtNNcFcyOgNeTp9Qs5y50imFg0e7qwsxlZ7DqDIxpHKwwtLhoZz32CeorVT8.jpg?quality=95&as=32x22,48x33,72x49,108x74,160x110,240x165,360x247,480x329,540x371,640x439,720x494,1080x741,1280x878,1386x951&from=bu&cs=1386x0)
 
 - Форма авторизации
 ![Форма авторизации](https://sun9-84.userapi.com/s/v1/ig2/U1B6DAz-Nwg0okSmTWi93RQYbdpw5WT8wNPcmFD0ct-GXRZjQkkNecuSjnqvZUXmrpsi6GAp1mQetGEndbWXvLmu.jpg?quality=95&as=32x32,48x48,72x73,108x109,160x161,240x242,360x363,480x484,540x545,640x646,647x653&from=bu&cs=647x0)
+
+- Форма регистрации
+![Форма регистрации](https://sun9-42.userapi.com/s/v1/ig2/9XTL5DRr_sjZeENIfe1UFhHT3RRuvG83jv1KJXS4UKDuLkipzvHXPyJaoV6Ysf6Sqo1weKif5xpYD0enndOlnocQ.jpg?quality=95&as=32x46,48x69,72x104,108x156,160x231,240x346,360x520,480x693,540x779,640x924,686x990&from=bu&cs=686x0)
   
 - Страница объявления
-  https://screenshots/announcement.png
+![Страница объявления](https://sun9-7.userapi.com/s/v1/ig2/Iciix960qGHHqQqpJPS1TgLXPvgpEUfzigWtBdNHMzdkrBVZn-_1Pns2RsSUSorxMWtnksTrjQee0ddep_l12Ag-.jpg?quality=95&as=32x30,48x45,72x68,108x101,160x150,240x226,360x338,480x451,540x508,640x602,720x677,1031x969&from=bu&cs=1031x0)
   
 - Создание объявления
-  https://screenshots/create-announcement.png
+![Создание объявления](https://sun9-22.userapi.com/s/v1/ig2/V2QHJQwyB04ypr2elN5dq4vcTPQoYvBM9LT01IHEaBu7scNbAe6q558ZUPrsIo_GgvE6WgmQnaQbqI47SRDVamaO.jpg?quality=95&as=32x26,48x39,72x59,108x89,160x131,240x197,360x296,480x394,540x444,640x526,720x592,1037x852&from=bu&cs=1037x0)
   
 - Панель администратора
-  https://screenshots/admin-panel.png
+![Панель администратора](https://sun9-42.userapi.com/s/v1/ig2/11JB8n2i6I-_tKUO86VFa7tRGLUGzfoU3rhB5BeaYdmBOIxrDGp4ttm1RcpCmTAOclpSi6CsFHRRaGoL-aK2Yh79.jpg?quality=95&as=32x51,48x77,72x115,108x172,160x255,240x383,360x574,480x765,530x845&from=bu&cs=530x0)
   
 - Управление категориями
-  https://screenshots/categories.png
+![Управление категориями](https://sun9-63.userapi.com/s/v1/ig2/cJR0lzYtYG2lHAGMoEg5jS29kT4eBl_06G9Oqlpdn9qz2MUnazwnOtQEkmGi4aibyenNSomzaj0wCyqn05aii7ba.jpg?quality=95&as=32x28,48x42,72x63,108x95,160x140,240x211,360x316,480x421,540x474,640x562,720x632,1050x922&from=bu&cs=1050x0)
+
+- Личный кабинет
+![Личный кабинет](https://sun9-56.userapi.com/s/v1/ig2/nEUi2Yiq05SdIfIz66bdCc5mkOp0ryKswhCq6Bi5C3qfzJIPq_A_cYMLKnTcGEM55FSVb0blEr4_hilRNGoWw8Qa.jpg?quality=95&as=32x14,48x20,72x30,108x46,160x68,240x102,360x152,480x203,540x229,640x271,720x305,1060x449&from=bu&cs=1060x0)
+
+- Мои объявления
+![Мои объявления](https://sun9-75.userapi.com/s/v1/ig2/-mDP2reeNIUXft-OY4qaHU2bzt2awkv0Gu7-Tue6JoAkMPQfIbpGHVvC4SOdYBlJSyw9sfvpXVsC3lA6tcFDzLpm.jpg?quality=95&as=32x16,48x25,72x37,108x55,160x82,240x123,360x185,480x246,540x277,640x329,720x370,1080x555,1110x570&from=bu&cs=1110x0)
 
 ## Видео-демонстрация
 
