@@ -113,7 +113,7 @@ docker-compose ps
   https://screenshots/home.png
 
 - Форма авторизации
-  https://sun9-84.userapi.com/s/v1/ig2/U1B6DAz-Nwg0okSmTWi93RQYbdpw5WT8wNPcmFD0ct-GXRZjQkkNecuSjnqvZUXmrpsi6GAp1mQetGEndbWXvLmu.jpg?quality=95&as=32x32,48x48,72x73,108x109,160x161,240x242,360x363,480x484,540x545,640x646,647x653&from=bu&cs=647x0
+![Форма авторизации](https://sun9-84.userapi.com/s/v1/ig2/U1B6DAz-Nwg0okSmTWi93RQYbdpw5WT8wNPcmFD0ct-GXRZjQkkNecuSjnqvZUXmrpsi6GAp1mQetGEndbWXvLmu.jpg?quality=95&as=32x32,48x48,72x73,108x109,160x161,240x242,360x363,480x484,540x545,640x646,647x653&from=bu&cs=647x0)
   
 - Страница объявления
   https://screenshots/announcement.png
