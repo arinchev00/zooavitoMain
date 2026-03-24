@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '/api', // 👈 Убираем localhost:8081, оставляем относительный путь
-  timeout: 10000,
+  baseURL: '/api',
+  timeout: 120000, // Увеличиваем до 2 минут для загрузки фото
 });
 
 // Добавляем токен к каждому запросу
@@ -28,9 +28,14 @@ instance.interceptors.response.use(
   },
   (error) => {
     console.error('API Error:', error.response?.status, error.message);
-    
+
+    // Специальная обработка для 413 (Request Entity Too Large)
+    if (error.response?.status === 413) {
+      console.error('File too large error');
+      error.userMessage = 'Файлы слишком большие. Уменьшите размер изображений или загрузите меньше файлов.';
+    }
     // Если пользователь заблокирован (403)
-    if (error.response?.status === 403) {
+    else if (error.response?.status === 403) {
       console.log('User is blocked, logging out...');
       localStorage.removeItem('token');
       localStorage.removeItem('userData');

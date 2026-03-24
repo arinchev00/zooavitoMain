@@ -1,0 +1,25 @@
+/* styles/error-messages.css */
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  padding: 12px 20px;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.alert-danger ul {
+  margin: 5px 0 0 20px;
+  padding: 0;
+}
+
+.alert-danger .close {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+  color: #721c24;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

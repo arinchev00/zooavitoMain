@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createAnnouncement, getAnnouncementById, updateAnnouncement } from '../../api/announcements';
 import { getAllCategories } from '../../api/categories';
+import { validateAllImages, MAX_FILE_SIZE, MAX_FILES } from '../../utils/fileValidation';
 import './AnnouncementForm.css';
 
 const AnnouncementForm = () => {
@@ -27,6 +28,7 @@ const AnnouncementForm = () => {
   const [newMainImageIndex, setNewMainImageIndex] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [imageErrors, setImageErrors] = useState([]);
 
   useEffect(() => {
     loadCategories();
@@ -55,13 +57,13 @@ const AnnouncementForm = () => {
         subcategoryId: announcement.subcategory?.id || ''
       });
       setSelectedCategory(announcement.category?.id || '');
-      
+
       if (announcement.images && announcement.images.length > 0) {
         setExistingImages(announcement.images);
         const mainImage = announcement.images.find(img => img.main === true);
         setMainImageId(mainImage ? mainImage.id : announcement.images[0].id);
       }
-      
+
       if (announcement.category?.id) {
         loadSubcategories(announcement.category.id);
       }
@@ -101,6 +103,16 @@ const AnnouncementForm = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    setImageErrors([]);
+
+    const validation = validateAllImages(files, newImages.length);
+
+    if (!validation.valid) {
+      setImageErrors(validation.errors);
+      e.target.value = '';
+      return;
+    }
+
     setNewImages(prev => [...prev, ...files]);
 
     files.forEach((file, fileIndex) => {
@@ -108,23 +120,24 @@ const AnnouncementForm = () => {
       reader.onloadend = () => {
         setImagePreviews(prev => {
           const newPreviews = [...prev, reader.result];
-          
-          // Если это первое новое фото и нет других главных фото
+
           if (prev.length === 0 && existingImages.length === 0 && mainImageId === null) {
             setNewMainImageIndex(0);
           }
-          
+
           return newPreviews;
         });
       };
       reader.readAsDataURL(file);
     });
+
+    e.target.value = '';
   };
 
   const removeExistingImage = (imageId) => {
     setImagesToDelete(prev => [...prev, imageId]);
     setExistingImages(prev => prev.filter(img => img.id !== imageId));
-    
+
     if (mainImageId === imageId) {
       const remainingImages = existingImages.filter(img => img.id !== imageId);
       if (remainingImages.length > 0) {
@@ -141,7 +154,7 @@ const AnnouncementForm = () => {
   const removeNewImage = (index) => {
     setNewImages(prev => prev.filter((_, i) => i !== index));
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
-    
+
     if (newMainImageIndex === index) {
       if (existingImages.length > 0) {
         setNewMainImageIndex(null);
@@ -168,32 +181,44 @@ const AnnouncementForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Проверяем, есть ли хотя бы одно изображение
+    if (existingImages.length === 0 && newImages.length === 0 && !isEditing) {
+      setError('Добавьте хотя бы одно фото объявления');
+      return;
+    }
+
     setLoading(true);
     setError('');
+    setImageErrors([]);
 
     try {
       const formDataToSend = new FormData();
-      
+
       const announcementData = {
         title: formData.title,
         price: parseInt(formData.price),
         description: formData.description,
         subcategoryId: parseInt(formData.subcategoryId)
       };
-      
+
       formDataToSend.append(
-        'announcement', 
+        'announcement',
         new Blob([JSON.stringify(announcementData)], { type: 'application/json' })
       );
-      
+
       if (isEditing && imagesToDelete.length > 0) {
         formDataToSend.append('imagesToDelete', JSON.stringify(imagesToDelete));
       }
-      
+
       if (mainImageId) {
         formDataToSend.append('mainImageId', mainImageId.toString());
       }
-      
+
+      if (newMainImageIndex !== null) {
+        formDataToSend.append('newMainImageIndex', newMainImageIndex.toString());
+      }
+
       newImages.forEach(image => {
         formDataToSend.append('images', image);
       });
@@ -203,11 +228,19 @@ const AnnouncementForm = () => {
       } else {
         await createAnnouncement(formDataToSend);
       }
-      
+
       navigate('/announcements');
     } catch (error) {
       console.error('Ошибка при сохранении объявления:', error);
-      setError('Не удалось сохранить объявление');
+
+      // Обработка ошибки 413 (Request Entity Too Large)
+      if (error.response?.status === 413) {
+        setError('Общий размер изображений слишком большой. Пожалуйста, загрузите меньше фотографий или используйте изображения меньшего размера. Максимальный общий размер: 50 МБ');
+      } else if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Не удалось сохранить объявление. Проверьте размер изображений и попробуйте снова.');
+      }
     } finally {
       setLoading(false);
     }
@@ -220,7 +253,26 @@ const AnnouncementForm = () => {
           {isEditing ? 'Редактировать объявление' : 'Создать новое объявление'}
         </h2>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+        {error && <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Ошибка!</strong> {error}
+          <button type="button" className="close" onClick={() => setError('')}>
+            <span>&times;</span>
+          </button>
+        </div>}
+
+        {imageErrors.length > 0 && (
+          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Ошибка загрузки файлов:</strong>
+            <ul className="mb-0 mt-2">
+              {imageErrors.map((err, idx) => (
+                <li key={idx}>{err}</li>
+              ))}
+            </ul>
+            <button type="button" className="close" onClick={() => setImageErrors([])}>
+              <span>&times;</span>
+            </button>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="announcement-form">
           <div className="form-group">
@@ -306,27 +358,30 @@ const AnnouncementForm = () => {
           </div>
 
           <div className="form-group">
-            <label>Фотографии</label>
-            
+            <label>Фотографии {!isEditing && <span className="required-star">*</span>}</label>
+            <small className="form-text text-muted d-block mb-2">
+              Максимум {MAX_FILES} фото, до {MAX_FILE_SIZE / 1024 / 1024} МБ на файл. Поддерживаются: JPG, PNG, WEBP, GIF
+            </small>
+
             {/* Существующие изображения */}
             {isEditing && existingImages.length > 0 && (
-              <div className="existing-images">
+              <div className="existing-images mb-3">
                 <h6>Текущие фотографии:</h6>
                 <div className="image-previews">
                   {existingImages.map(image => (
-                    <div 
-                      key={image.id} 
+                    <div
+                      key={image.id}
                       className={`image-preview ${mainImageId === image.id ? 'main-image' : ''}`}
                     >
-                      <img 
-                        src={`data:${image.contentType};base64,${image.base64Image}`} 
-                        alt={image.originalFileName} 
+                      <img
+                        src={`data:${image.contentType};base64,${image.base64Image}`}
+                        alt={image.originalFileName}
                       />
-                      <div style={{ 
-                        position: 'absolute', 
-                        top: '5px', 
-                        left: '5px', 
-                        display: 'flex', 
+                      <div style={{
+                        position: 'absolute',
+                        top: '5px',
+                        left: '5px',
+                        display: 'flex',
                         gap: '5px',
                         zIndex: 10
                       }}>
@@ -388,19 +443,25 @@ const AnnouncementForm = () => {
               <input
                 type="file"
                 id="images"
-                accept="image/*"
+                accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
                 onChange={handleImageChange}
                 multiple
                 className="image-input"
+                disabled={newImages.length + existingImages.length >= MAX_FILES}
               />
-              <label htmlFor="images" className="image-upload-label">
+              <label htmlFor="images" className="image-upload-label" style={{
+                cursor: newImages.length + existingImages.length >= MAX_FILES ? 'not-allowed' : 'pointer',
+                opacity: newImages.length + existingImages.length >= MAX_FILES ? 0.6 : 1
+              }}>
                 <i className="fas fa-cloud-upload-alt"></i>
                 <span>Выберите файлы или перетащите их сюда</span>
               </label>
             </div>
-            <small className="form-text text-muted">
-              Можно выбрать несколько изображений. Поддерживаются JPG, PNG, GIF.
-            </small>
+            {newImages.length + existingImages.length >= MAX_FILES && (
+              <small className="form-text text-warning">
+                Достигнут лимит фотографий ({MAX_FILES} шт.)
+              </small>
+            )}
           </div>
 
           {/* Превью новых изображений */}
@@ -409,18 +470,16 @@ const AnnouncementForm = () => {
               <h6>Новые фотографии:</h6>
               <div className="image-previews">
                 {imagePreviews.map((preview, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className={`image-preview ${newMainImageIndex === index ? 'main-image' : ''}`}
                   >
                     <img src={preview} alt={`Preview ${index + 1}`} />
-                    
-                    {/* Кнопки управления для нового фото */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      top: '5px', 
-                      left: '5px', 
-                      display: 'flex', 
+                    <div style={{
+                      position: 'absolute',
+                      top: '5px',
+                      left: '5px',
+                      display: 'flex',
                       gap: '5px',
                       zIndex: 10
                     }}>
@@ -464,8 +523,6 @@ const AnnouncementForm = () => {
                         </span>
                       )}
                     </div>
-
-                    {/* Кнопка удаления */}
                     <button
                       type="button"
                       onClick={() => removeNewImage(index)}
@@ -491,6 +548,9 @@ const AnnouncementForm = () => {
                     >
                       ✕
                     </button>
+                    <div className="image-size mt-1 small text-muted">
+                      {(newImages[index]?.size / 1024 / 1024).toFixed(2)} МБ
+                    </div>
                   </div>
                 ))}
               </div>
