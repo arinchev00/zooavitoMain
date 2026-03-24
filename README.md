@@ -93,6 +93,39 @@ docker-compose up -d --build
 
 # Проверить статус
 docker-compose ps
+```
 
-# Посмотреть логи
-docker-compose logs -f
+### Требования к загрузке изображений
+
+| Параметр | Значение |
+|------------|------------|
+| **Максимальный размер одного файла** | 10 МБ |
+| **Максимальный общий размер запроса** | 50 МБ |
+| **Максимальное количество фото** | 10 шт. |
+| **Поддерживаемые форматы** | JPG, JPEG, PNG, WEBP, GIF |
+| **Font Awesome** | Иконки |
+| **dnd-kit** | Drag-and-drop для управления порядком категорий |
+| **jwt-decode** | Декодирование JWT токенов |
+
+
+## Демонстрация
+
+### Скриншоты
+
+- Главная страница
+  https://screenshots/home.png
+  
+- Страница объявления
+  https://screenshots/announcement.png
+  
+- Создание объявления
+  https://screenshots/create-announcement.png
+  
+- Панель администратора
+  https://screenshots/admin-panel.png
+  
+- Управление категориями
+  https://screenshots/categories.png
+
+## Видео-демонстрация
+
