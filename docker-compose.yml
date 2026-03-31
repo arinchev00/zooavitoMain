@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15
@@ -33,6 +31,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
       GOOGLE_RECAPTCHA_SECRET: ${GOOGLE_RECAPTCHA_SECRET}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS}
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -47,11 +46,13 @@ services:
     build:
       context: ./frontend
       args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL}
         - REACT_APP_RECAPTCHA_SITE_KEY=${REACT_APP_RECAPTCHA_SITE_KEY}
     container_name: zooavito-frontend
     ports:
       - "80:80"
     environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
       - REACT_APP_RECAPTCHA_SITE_KEY=${REACT_APP_RECAPTCHA_SITE_KEY}
     depends_on:
       - backend

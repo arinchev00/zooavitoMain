@@ -16,4 +16,3 @@ backend/mvnw.cmd
 frontend/node_modules/
 frontend/build/
 frontend/.env
-.env

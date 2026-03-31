@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCategories } from '../../context/CategoryContext';
 import { getAllAnnouncements } from '../../api/announcements';
+import api from '../../api/axios'; // ← ДОБАВИТЬ ИМПОРТ
 import AnnouncementCard from './AnnouncementCard';
 import AnnouncementFilter from './AnnouncementFilter';
 
@@ -11,12 +12,12 @@ const AnnouncementsPage = () => {
   const { categories } = useCategories();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  
+
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [subcategoryNames, setSubcategoryNames] = useState({});
-  
+
   const categoryId = searchParams.get('categoryId');
   const subcategoryId = searchParams.get('subcategoryId');
   const minPrice = searchParams.get('minPrice');
@@ -34,15 +35,15 @@ const AnnouncementsPage = () => {
     if (subcategoryId && !subcategoryNames[subcategoryId]) {
       fetchSubcategoryName(subcategoryId);
     }
-  }, [subcategoryId]);
+  }, [subcategoryId, subcategoryNames]);
 
+  // ← ИСПРАВЛЕННАЯ ФУНКЦИЯ - используем axios
   const fetchSubcategoryName = async (id) => {
     try {
-      const response = await fetch(`/api/subcategories/${id}`);
-      const data = await response.json();
+      const response = await api.get(`/subcategories/${id}`);
       setSubcategoryNames(prev => ({
         ...prev,
-        [id]: data.title
+        [id]: response.data.title
       }));
     } catch (error) {
       console.error('Ошибка при загрузке подкатегории:', error);

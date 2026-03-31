@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createAnnouncement, getAnnouncementById, updateAnnouncement } from '../../api/announcements';
-import { getAllCategories } from '../../api/categories';
+import { getAllCategories, getSubcategoriesByCategoryId } from '../../api/categories'; // ← ИСПРАВЛЕНО
 import { validateAllImages, MAX_FILE_SIZE, MAX_FILES } from '../../utils/fileValidation';
 import './AnnouncementForm.css';
 
@@ -73,11 +73,11 @@ const AnnouncementForm = () => {
     }
   };
 
+  // ← ИСПРАВЛЕННАЯ ФУНКЦИЯ - использует axios через API
   const loadSubcategories = async (categoryId) => {
     try {
-      const response = await fetch(`/api/subcategories/by-category/${categoryId}`);
-      const data = await response.json();
-      setSubcategories(data);
+      const response = await getSubcategoriesByCategoryId(categoryId);
+      setSubcategories(response.data);
     } catch (error) {
       console.error('Ошибка при загрузке подкатегорий:', error);
     }
@@ -121,6 +121,7 @@ const AnnouncementForm = () => {
         setImagePreviews(prev => {
           const newPreviews = [...prev, reader.result];
 
+          // Если это первое новое фото и нет существующих фото и нет главного фото
           if (prev.length === 0 && existingImages.length === 0 && mainImageId === null) {
             setNewMainImageIndex(0);
           }
@@ -181,12 +182,6 @@ const AnnouncementForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Проверяем, есть ли хотя бы одно изображение
-    if (existingImages.length === 0 && newImages.length === 0 && !isEditing) {
-      setError('Добавьте хотя бы одно фото объявления');
-      return;
-    }
 
     setLoading(true);
     setError('');
@@ -358,9 +353,9 @@ const AnnouncementForm = () => {
           </div>
 
           <div className="form-group">
-            <label>Фотографии {!isEditing && <span className="required-star">*</span>}</label>
+            <label>Фотографии</label>
             <small className="form-text text-muted d-block mb-2">
-              Максимум {MAX_FILES} фото, до {MAX_FILE_SIZE / 1024 / 1024} МБ на файл. Поддерживаются: JPG, PNG, WEBP, GIF
+              Необязательно. Максимум {MAX_FILES} фото, до {MAX_FILE_SIZE / 1024 / 1024} МБ на файл. Поддерживаются: JPG, PNG, WEBP, GIF
             </small>
 
             {/* Существующие изображения */}

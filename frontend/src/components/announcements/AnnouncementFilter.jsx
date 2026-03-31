@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '../../context/CategoryContext';
-import { useCategoryOrder } from '../../context/CategoryOrderContext'; // Добавляем импорт
+import { useCategoryOrder } from '../../context/CategoryOrderContext';
+import api from '../../api/axios'; // ← Импортируем настроенный axios
 
 const AnnouncementFilter = ({ initialFilters = {}, onFilterChange }) => {
   const { categories } = useCategories();
-  const { getVisibleCategories } = useCategoryOrder(); // Получаем функцию для сортировки
-  
+  const { getVisibleCategories } = useCategoryOrder();
+
   const [subcategories, setSubcategories] = useState([]);
-  const [sortedCategories, setSortedCategories] = useState([]); // Новое состояние
+  const [sortedCategories, setSortedCategories] = useState([]);
   const [filters, setFilters] = useState({
     categoryId: initialFilters.categoryId || '',
     subcategoryId: initialFilters.subcategoryId || '',
@@ -40,28 +41,24 @@ const AnnouncementFilter = ({ initialFilters = {}, onFilterChange }) => {
     });
   }, [initialFilters]);
 
-const loadSubcategories = async (categoryId) => {
-  try {
-    // Было (прямой вызов бэкенда)
-    // const response = await fetch(`http://localhost:8081/v1/api/subcategories/by-category/${categoryId}`);
-    
-    // Стало (через Nginx)
-    const response = await fetch(`/api/subcategories/by-category/${categoryId}`);
-    const data = await response.json();
-    setSubcategories(data);
-  } catch (error) {
-    console.error('Ошибка при загрузке подкатегорий:', error);
-  }
-};
+  // ← ИСПРАВЛЕННАЯ ФУНКЦИЯ - используем axios
+  const loadSubcategories = async (categoryId) => {
+    try {
+      const response = await api.get(`/subcategories/by-category/${categoryId}`);
+      setSubcategories(response.data);
+    } catch (error) {
+      console.error('Ошибка при загрузке подкатегорий:', error);
+    }
+  };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     const newFilters = { ...filters, [name]: value };
-    
+
     if (name === 'categoryId') {
       newFilters.subcategoryId = '';
     }
-    
+
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
@@ -82,18 +79,18 @@ const loadSubcategories = async (categoryId) => {
     <div className="card mb-4">
       <div className="card-body">
         <h5 className="card-title mb-3">Фильтр объявлений</h5>
-        
+
         <div className="row">
           <div className="col-md-3 mb-3">
             <label className="form-label">Категория</label>
-            <select 
-              className="form-control" 
-              name="categoryId" 
+            <select
+              className="form-control"
+              name="categoryId"
               value={filters.categoryId}
               onChange={handleFilterChange}
             >
               <option value="">Все категории</option>
-              {sortedCategories.map(cat => ( // Используем sortedCategories вместо categories
+              {sortedCategories.map(cat => (
                 <option key={cat.id} value={cat.id}>{cat.title}</option>
               ))}
             </select>

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '/api',
-  timeout: 120000, // Увеличиваем до 2 минут для загрузки фото
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8081/api',
+  timeout: 120000,
 });
 
 // Добавляем токен к каждому запросу
