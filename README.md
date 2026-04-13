@@ -80,8 +80,8 @@
 
 ```bash
 # Клонировать репозиторий
-git clone https://github.com/your-username/zooavito.git
-cd zooavito
+git clone https://github.com/arinchev00/zooavitoMain.git
+cd zooavitoMain
 
 # Создать файл с переменными окружения
 cp .env.example .env
