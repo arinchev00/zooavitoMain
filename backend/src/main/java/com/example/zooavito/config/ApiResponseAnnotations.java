@@ -46,6 +46,21 @@ public class ApiResponseAnnotations {
 
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
+    @ApiResponse(
+            responseCode = "400",
+            description = "Бизнес-ошибка (неверный текущий пароль, пароли не совпадают)",
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = {
+                            @ExampleObject(name = "PasswordError", value = "{\"currentPassword\": \"Неверный текущий пароль\"}"),
+                            @ExampleObject(name = "PasswordsMismatch", value = "{\"confirmNewPassword\": \"Пароли не совпадают\"}")
+                    }
+            )
+    )
+    public @interface BusinessErrorMeResponse {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
     @ApiResponse(responseCode = "401", description = "Не авторизован", content = @Content)
     public @interface UnauthorizedResponse {}
 
@@ -72,7 +87,6 @@ public class ApiResponseAnnotations {
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @BadRequestResponse
-    @NotFoundResponse
     @InternalServerErrorResponse
     public @interface CommonGetResponses {}
 
@@ -82,5 +96,39 @@ public class ApiResponseAnnotations {
     @UnauthorizedResponse
     @ForbiddenResponse
     @InternalServerErrorResponse
+    public @interface CommonGetAdminResponses {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @BadRequestResponse
+    @UnauthorizedResponse
+    @InternalServerErrorResponse
     public @interface CommonPostResponses {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @BadRequestResponse
+    @UnauthorizedResponse
+    @ForbiddenResponse
+    @InternalServerErrorResponse
+    public @interface CommonPostAdminResponses {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @BadRequestResponse
+    @UnauthorizedResponse
+    @ForbiddenResponse
+    @NotFoundResponse
+    @InternalServerErrorResponse
+    public @interface CommonPutResponses {}
+
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @BadRequestResponse
+    @UnauthorizedResponse
+    @ForbiddenResponse
+    @NotFoundResponse
+    @InternalServerErrorResponse
+    public @interface CommonDeleteResponses {}
 }

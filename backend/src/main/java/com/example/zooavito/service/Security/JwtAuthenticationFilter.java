@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsServiceImpl userDetailsService;
-    private final UserRepository userRepository; // Добавляем репозиторий
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(
@@ -36,43 +36,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String path = request.getServletPath();
+
+        // Пропускаем публичные эндпоинты
         if (path.startsWith("/swagger-ui") ||
-    path.startsWith("/v3/api-docs") ||
-    path.startsWith("/v1/api/auth") ||
-    path.startsWith("/v1/api/registration") ||
-    (path.startsWith("/v1/api/announcement") && !path.contains("/user/") && request.getMethod().equals("GET")) ||
-    (path.startsWith("/v1/api/categories") && request.getMethod().equals("GET")) ||
-    (path.startsWith("/v1/api/subcategories") && request.getMethod().equals("GET"))) {
-    filterChain.doFilter(request, response);
-    return;
-}
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/v1/api/auth") ||
+                path.startsWith("/v1/api/registration") ||
+                (path.startsWith("/v1/api/announcement") && !path.contains("/user/") && request.getMethod().equals("GET")) ||
+                (path.startsWith("/v1/api/categories") && request.getMethod().equals("GET")) ||
+                (path.startsWith("/v1/api/subcategories") && request.getMethod().equals("GET"))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        String token = getJwtFromRequest(request);
+        try {
+            String token = getJwtFromRequest(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsername(token);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                String username = jwtTokenProvider.getUsername(token);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            User user = userRepository.findByEmail(username);
-            if (user == null || !user.isEnabled()) {
-                log.warn("Заблокированный пользователь {} пытается выполнить запрос: {}", username, request.getRequestURI());
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"message\":\"Ваш аккаунт заблокирован\"}");
-                return;
+                User user = userRepository.findByEmail(username);
+                if (user == null || !user.isEnabled()) {
+                    log.warn("Заблокированный пользователь {} пытается выполнить запрос: {}", username, request.getRequestURI());
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\": \"Доступ запрещен\", \"message\": \"Ваш аккаунт заблокирован\"}");
+                    return;
+                }
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("Аутентифицирован пользователь: {}", username);
             }
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Убираем else блок с clearContext() - не нужно
+        } catch (Exception e) {
+            log.error("Ошибка при аутентификации: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

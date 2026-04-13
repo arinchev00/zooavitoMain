@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/me")
     @Operation(summary = "Получить информацию о текущем пользователе")
     @ApiResponse(responseCode = "200", description = "Успешно")
-    @ApiResponseAnnotations.CommonGetResponses
+    @ApiResponseAnnotations.InternalServerErrorResponse
     public ResponseEntity<UserProfileResponse> getCurrentUser(Authentication authentication) {
         String email = authentication.getName();
         log.info("Запрос информации о пользователе: {}", email);
@@ -45,7 +45,9 @@ public class UserController {
     @ResponseStatus(org.springframework.http.HttpStatus.OK)
     @Operation(summary = "Обновить профиль пользователя")
     @ApiResponse(responseCode = "200", description = "Профиль успешно обновлен")
-    @ApiResponseAnnotations.BusinessErrorResponse
+    @ApiResponseAnnotations.BusinessErrorMeResponse
+    @ApiResponseAnnotations.UnauthorizedResponse
+    @ApiResponseAnnotations.InternalServerErrorResponse
     public UpdateUserResponse updateUser(
             @Valid @RequestBody UpdateUserRequest request,
             Authentication authentication

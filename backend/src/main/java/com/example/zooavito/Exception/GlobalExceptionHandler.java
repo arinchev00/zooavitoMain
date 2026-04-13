@@ -3,6 +3,7 @@ package com.example.zooavito.Exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,14 +55,37 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Void> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
         System.err.println("Access denied: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Доступ запрещен");
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    // ← ДОБАВИТЬ ОБРАБОТЧИК ДЛЯ 401
+    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationCredentialsNotFoundException ex) {
+        System.err.println("Authentication error: " + ex.getMessage());
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Не авторизован");
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Void> handleRuntimeException(RuntimeException ex) {
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
         System.err.println("Internal error: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        ex.printStackTrace();  // Добавим stack trace для отладки
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Внутренняя ошибка сервера");
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

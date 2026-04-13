@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,14 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    // Проверка аутентификации
+    private void checkAuthentication(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            log.warn("Попытка доступа к защищенному эндпоинту без аутентификации");
+            throw new AuthenticationCredentialsNotFoundException("Пользователь не авторизован");
+        }
+    }
+
     @PostMapping("/announcement/{announcementId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Добавить комментарий к объявлению")
@@ -41,6 +51,8 @@ public class CommentController {
             @Valid @RequestBody CommentRequest request,
             Authentication authentication
     ) {
+        checkAuthentication(authentication);
+
         String userEmail = authentication.getName();
         log.info("Создание комментария к объявлению ID: {}, пользователь: {}", announcementId, userEmail);
         return commentService.createComment(announcementId, request, userEmail);
@@ -50,8 +62,10 @@ public class CommentController {
     @Operation(summary = "Получить все комментарии к объявлению")
     @ApiResponse(responseCode = "200", description = "Успешно",
             content = @Content(schema = @Schema(implementation = CommentResponse.class)))
-    @ApiResponseAnnotations.CommonGetResponses
+    @ApiResponseAnnotations.NotFoundResponse
+    @ApiResponseAnnotations.InternalServerErrorResponse
     public List<CommentResponse> getCommentsByAnnouncement(@PathVariable Long announcementId) {
+        // Публичный эндпоинт - не требует аутентификации
         return commentService.getCommentsByAnnouncementId(announcementId);
     }
 
@@ -60,10 +74,12 @@ public class CommentController {
     @ApiResponse(responseCode = "200", description = "Успешно",
             content = @Content(schema = @Schema(implementation = CommentResponse.class)))
     @ApiResponseAnnotations.CommonGetResponses
+    @ApiResponseAnnotations.NotFoundResponse
     public Page<CommentResponse> getCommentsByAnnouncementPaged(
             @PathVariable Long announcementId,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        // Публичный эндпоинт - не требует аутентификации
         return commentService.getCommentsByAnnouncementId(announcementId, pageable);
     }
 
@@ -71,8 +87,10 @@ public class CommentController {
     @Operation(summary = "Получить комментарий по ID")
     @ApiResponse(responseCode = "200", description = "Успешно",
             content = @Content(schema = @Schema(implementation = CommentResponse.class)))
-    @ApiResponseAnnotations.CommonGetResponses
+    @ApiResponseAnnotations.NotFoundResponse
+    @ApiResponseAnnotations.InternalServerErrorResponse
     public CommentResponse getComment(@PathVariable Long id) {
+        // Публичный эндпоинт - не требует аутентификации
         return commentService.getCommentById(id);
     }
 
@@ -80,12 +98,14 @@ public class CommentController {
     @Operation(summary = "Обновить комментарий")
     @ApiResponse(responseCode = "200", description = "Комментарий обновлен",
             content = @Content(schema = @Schema(implementation = CommentResponse.class)))
-    @ApiResponseAnnotations.CommonPostResponses
+    @ApiResponseAnnotations.CommonPutResponses
     public CommentResponse updateComment(
             @PathVariable Long id,
             @Valid @RequestBody CommentRequest request,
             Authentication authentication
     ) {
+        checkAuthentication(authentication);
+
         String userEmail = authentication.getName();
         log.info("Обновление комментария ID: {}, пользователь: {}", id, userEmail);
         return commentService.updateComment(id, request, userEmail);
@@ -95,11 +115,13 @@ public class CommentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Удалить комментарий")
     @ApiResponse(responseCode = "204", description = "Комментарий удален")
-    @ApiResponseAnnotations.CommonPostResponses
+    @ApiResponseAnnotations.CommonDeleteResponses
     public void deleteComment(
             @PathVariable Long id,
             Authentication authentication
     ) {
+        checkAuthentication(authentication);
+
         String userEmail = authentication.getName();
         log.info("Удаление комментария ID: {}, пользователь: {}", id, userEmail);
         commentService.deleteComment(id, userEmail);
@@ -109,8 +131,10 @@ public class CommentController {
     @Operation(summary = "Получить комментарии пользователя")
     @ApiResponse(responseCode = "200", description = "Успешно",
             content = @Content(schema = @Schema(implementation = CommentResponse.class)))
-    @ApiResponseAnnotations.CommonGetResponses
+    @ApiResponseAnnotations.NotFoundResponse
+    @ApiResponseAnnotations.InternalServerErrorResponse
     public List<CommentResponse> getCommentsByUser(@PathVariable Long userId) {
+        // Публичный эндпоинт - не требует аутентификации
         return commentService.getCommentsByUserId(userId);
     }
 }

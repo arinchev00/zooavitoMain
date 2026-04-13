@@ -1,8 +1,10 @@
 package com.example.zooavito.controller;
 
+import com.example.zooavito.config.ApiResponseAnnotations;
 import com.example.zooavito.response.UserAdminResponse;
 import com.example.zooavito.service.Admin.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,8 @@ public class AdminController {
 
     @GetMapping("/users")
     @Operation(summary = "Получить список всех пользователей")
+    @ApiResponse(responseCode = "200", description = "Успешно")
+    @ApiResponseAnnotations.CommonGetAdminResponses
     public List<UserAdminResponse> getAllUsers() {
         log.info("Запрос списка всех пользователей");
         return adminService.getAllUsers();
@@ -30,6 +34,8 @@ public class AdminController {
 
     @PutMapping("/users/{userId}/block")
     @Operation(summary = "Заблокировать пользователя")
+    @ApiResponse(responseCode = "200", description = "Успешно")
+    @ApiResponseAnnotations.CommonPutResponses
     public void blockUser(@PathVariable Long userId) {
         log.info("Блокировка пользователя с ID: {}", userId);
         adminService.blockUser(userId);
@@ -37,6 +43,8 @@ public class AdminController {
 
     @PutMapping("/users/{userId}/unblock")
     @Operation(summary = "Разблокировать пользователя")
+    @ApiResponse(responseCode = "200", description = "Успешно")
+    @ApiResponseAnnotations.CommonPutResponses
     public void unblockUser(@PathVariable Long userId) {
         log.info("Разблокировка пользователя с ID: {}", userId);
         adminService.unblockUser(userId);
@@ -44,6 +52,8 @@ public class AdminController {
 
     @PutMapping("/users/{userId}/role")
     @Operation(summary = "Изменить роль пользователя")
+    @ApiResponse(responseCode = "200", description = "Роль изменена")
+    @ApiResponseAnnotations.CommonPutResponses
     public void changeUserRole(@PathVariable Long userId, @RequestParam String role) {
         log.info("Изменение роли пользователя {} на {}", userId, role);
         adminService.changeUserRole(userId, role);

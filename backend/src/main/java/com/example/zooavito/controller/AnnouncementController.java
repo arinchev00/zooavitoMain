@@ -7,16 +7,14 @@ import com.example.zooavito.service.Announcement.AnnouncementService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,10 +33,7 @@ public class AnnouncementController {
 
     @GetMapping
     @Operation(summary = "Получить все объявления с фильтрацией")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Успешно",
-                    content = @Content(schema = @Schema(implementation = AnnouncementResponse.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "Успешно")
     @ApiResponseAnnotations.CommonGetResponses
     public List<AnnouncementResponse> getAllAnnouncements(
             @RequestParam(required = false) Long categoryId,
@@ -46,21 +41,20 @@ public class AnnouncementController {
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice
     ) {
-        log.info("Получение всех объявлений с фильтрацией: categoryId={}, subcategoryId={}, minPrice={}, maxPrice={}",
-                categoryId, subcategoryId, minPrice, maxPrice);
+        log.info("Получение всех объявлений с фильтрацией");
         return announcementService.getAllAnnouncements(categoryId, subcategoryId, minPrice, maxPrice);
     }
 
     @GetMapping("/user/me")
     @Operation(summary = "Получить объявления текущего пользователя")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Успешно",
-                    content = @Content(schema = @Schema(implementation = AnnouncementResponse.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "Успешно")
     @ApiResponseAnnotations.CommonGetResponses
-    public List<AnnouncementResponse> getMyAnnouncements(
-            Authentication authentication
-    ) {
+    @ApiResponseAnnotations.UnauthorizedResponse
+    public List<AnnouncementResponse> getMyAnnouncements(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Пользователь не авторизован");
+        }
+
         String userEmail = authentication.getName();
         log.info("Получение объявлений пользователя: {}", userEmail);
         return announcementService.getAnnouncementsByUserEmail(userEmail);
@@ -69,29 +63,27 @@ public class AnnouncementController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Создание нового объявления (можно несколько фото)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Объявление успешно создано")
-    })
+    @ApiResponse(responseCode = "201", description = "Объявление успешно создано")
     @ApiResponseAnnotations.CommonPostResponses
-    @ApiResponseAnnotations.UnsupportedMediaResponse
     public AnnouncementResponse createAnnouncement(
             @Valid @RequestPart("announcement") AnnouncementRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images,  // ← List!
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             Authentication authentication
     ) throws IOException {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Пользователь не авторизован");
+        }
+
         String userEmail = authentication.getName();
-        log.info("Создание объявления: title={}, imagesCount={}, user={}",
-                request.getTitle(), images != null ? images.size() : 0, userEmail);
+        log.info("Создание объявления: title={}, user={}", request.getTitle(), userEmail);
         return announcementService.createAnnouncement(request, images, userEmail);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить объявление по id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Успешно",
-                    content = @Content(schema = @Schema(implementation = AnnouncementResponse.class)))
-    })
-    @ApiResponseAnnotations.CommonGetResponses
+    @ApiResponse(responseCode = "200", description = "Успешно")
+    @ApiResponseAnnotations.NotFoundResponse
+    @ApiResponseAnnotations.InternalServerErrorResponse
     public AnnouncementResponse getAnnouncement(@PathVariable Long id) {
         return announcementService.getAnnouncementById(id);
     }
@@ -99,14 +91,20 @@ public class AnnouncementController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Обновить объявление (можно несколько фото)")
+    @ApiResponse(responseCode = "200", description = "Объявление обновлено")
+    @ApiResponseAnnotations.CommonPutResponses
     public AnnouncementResponse updateAnnouncement(
             @PathVariable Long id,
             @Valid @RequestPart("announcement") AnnouncementRequest request,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @RequestPart(value = "imagesToDelete", required = false) String imagesToDeleteJson,
-            @RequestPart(value = "mainImageId", required = false) String mainImageIdStr,  // добавить!
+            @RequestPart(value = "mainImageId", required = false) String mainImageIdStr,
             Authentication authentication
     ) throws IOException {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Пользователь не авторизован");
+        }
+
         String userEmail = authentication.getName();
 
         List<Long> imagesToDelete = null;
@@ -120,26 +118,23 @@ public class AnnouncementController {
             mainImageId = Long.parseLong(mainImageIdStr);
         }
 
-        log.info("Обновление объявления: id={}, imagesCount={}, imagesToDelete={}, mainImageId={}, user={}",
-                id, images != null ? images.size() : 0,
-                imagesToDelete != null ? imagesToDelete.size() : 0,
-                mainImageId, userEmail);
-
+        log.info("Обновление объявления: id={}, user={}", id, userEmail);
         return announcementService.updateAnnouncement(id, request, images, imagesToDelete, mainImageId, userEmail);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Удалить объявление")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Объявление удалено")
-    })
-    @ApiResponseAnnotations.CommonPostResponses
-    @ApiResponseAnnotations.NotFoundResponse
+    @ApiResponse(responseCode = "204", description = "Объявление удалено")
+    @ApiResponseAnnotations.CommonDeleteResponses
     public void deleteAnnouncement(
             @PathVariable Long id,
             Authentication authentication
     ) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Пользователь не авторизован");
+        }
+
         String userEmail = authentication.getName();
         log.info("Удаление объявления: id={}, user={}", id, userEmail);
         announcementService.deleteAnnouncement(id, userEmail);
